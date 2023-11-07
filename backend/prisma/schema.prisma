@@ -15,6 +15,7 @@ model Usuarios {
   nome         String         @db.VarChar(100)
   email        String         @unique @db.VarChar(100)
   senha        String         @db.VarChar(255)
+  isAdmin      Boolean        @db.Boolean @default(false)
   pedidos      Pedidos[] // Relacionamento um-para-muitos
   notificacoes Notificacoes[] // Relacionamento um-para-muitos
 }

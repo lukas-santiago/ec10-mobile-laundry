@@ -10,7 +10,8 @@
 		"format:check": "prettier --check .",
 		"format:write": "prettier --write .",
 		"lint:check": "eslint .",
-		"lint:fix": "eslint --fix ."
+		"lint:fix": "eslint --fix .",
+		"prisma:seed": "node prisma/seed.js"
 	},
 	"keywords": [],
 	"author": "",
