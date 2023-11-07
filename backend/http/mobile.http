@@ -1,0 +1,43 @@
+@HOST = http://localhost:3000
+
+# Usuário lista pedidos
+# Usuário lista serviço
+# Usuário escolhe serviço
+# Usuário cria pedido
+# Sistema cria notificação ao Admin
+# Admin termina o pedido
+# Sistema cria notificação ao Usuário
+# Usuário lista serviço
+
+GET {{HOST}}/servico
+
+###
+
+GET {{HOST}}/servico/1
+
+###
+
+GET {{HOST}}/pedido
+
+###
+
+POST {{HOST}}/pedido
+Content-Type: application/json
+
+{
+    "clienteId": 1,
+    "servicoId": 1
+}
+
+###
+
+POST {{HOST}}/notificacao/byUser
+Content-Type: application/json
+
+{
+    "userId": 1
+}
+
+###
+
+POST {{HOST}}/notificacao/1/disable

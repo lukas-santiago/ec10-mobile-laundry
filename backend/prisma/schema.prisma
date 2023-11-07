@@ -15,7 +15,7 @@ model Usuarios {
   nome         String         @db.VarChar(100)
   email        String         @unique @db.VarChar(100)
   senha        String         @db.VarChar(255)
-  isAdmin      Boolean        @db.Boolean @default(false)
+  isAdmin      Boolean        @default(false) @db.Boolean
   pedidos      Pedidos[] // Relacionamento um-para-muitos
   notificacoes Notificacoes[] // Relacionamento um-para-muitos
 }
@@ -32,6 +32,7 @@ model Pedidos {
   id          Int      @id @default(autoincrement())
   usuario_id  Int
   servico_id  Int
+  preco       Decimal  @db.Decimal(10, 2)
   data_pedido DateTime @default(now())
   status      String   @default("Em Processamento") @db.VarChar(50)
   usuario     Usuarios @relation(fields: [usuario_id], references: [id])
@@ -41,7 +42,9 @@ model Pedidos {
 model Notificacoes {
   id         Int      @id @default(autoincrement())
   usuario_id Int
+  pedido_id Int?
   mensagem   String   @db.Text
+  ativo      Boolean  @default(true) @db.Boolean
   data_envio DateTime @default(now())
   usuario    Usuarios @relation(fields: [usuario_id], references: [id])
 }

@@ -3,11 +3,13 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 // Create
-export async function createNotificacao(usuarioId, mensagem) {
+export async function createNotificacao(usuarioId, mensagem, servicoId = 0) {
 	return await prisma.notificacoes.create({
 		data: {
 			usuario_id: usuarioId,
 			mensagem: mensagem,
+			servicoId: servicoId,
+			ativo: true,
 		},
 	})
 }
@@ -42,6 +44,29 @@ export async function listNotificacoes() {
 	return await prisma.notificacoes.findMany({
 		include: {
 			usuario: true,
+		},
+	})
+}
+
+// List by user
+export async function listNotificacoesByUser(userId) {
+	const newLocal = await prisma.notificacoes.findMany({
+		where: {
+			usuario_id: userId,
+			ativo: true,
+		},
+	})
+	return newLocal
+}
+
+// List by user
+export async function disableNotificacao(id) {
+	return await prisma.notificacoes.update({
+		where: {
+			id: id,
+		},
+		data: {
+			ativo: false,
 		},
 	})
 }

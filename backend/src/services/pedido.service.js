@@ -3,11 +3,12 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 // Create
-export async function createPedido(usuarioId, servicoId) {
+export async function createPedido(usuarioId, servicoId, preco) {
 	return await prisma.pedidos.create({
 		data: {
 			usuario_id: usuarioId,
 			servico_id: servicoId,
+			preco: preco,
 		},
 	})
 }

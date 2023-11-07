@@ -53,7 +53,9 @@ export async function authenticate(req, res, next) {
 export async function me(req, res, next) {
 	try {
 		const { userId } = req
-		res.json(await authService.getUserById(userId))
+		const user = await authService.getUserById(userId)
+
+		res.json(user)
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}

@@ -1,6 +1,7 @@
 import httpStatus from 'http-status'
 import { AppError } from '../errors/app.error.js'
 import * as notificacaoService from '../services/notificacao.service.js'
+import * as pedidoService from '../services/pedido.service.js'
 
 /**
  * @param {import('express').Request} req
@@ -24,6 +25,51 @@ export async function getNotificacao(req, res, next) {
 export async function listNotificacoes(req, res, next) {
 	try {
 		res.json(await notificacaoService.listNotificacoes())
+	} catch (error) {
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
+	}
+}
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+export async function listNotificacoesByUser(req, res, next) {
+	try {
+		const { userId } = req.body
+		const notificacao = await notificacaoService.listNotificacoesByUser(
+			userId
+		)
+		res.json(notificacao)
+	} catch (error) {
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
+	}
+}
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+export async function disableNotificacao(req, res, next) {
+	try {
+		const { notificacaoId } = req.params
+		const notificacao = await notificacaoService.getNotificacaoById(
+			Number(notificacaoId)
+		)
+
+		if (notificacao.pedido_id > 0) {
+			const pedido = await pedidoService.getPedidoById(
+				notificacao.pedido_id
+			)
+
+			notificacaoService.createNotificacao(
+				pedido.usuario.id,
+				`O Pedido do serviço "${pedido.servico.nome}" foi realizado`
+			)
+		}
+		await notificacaoService.disableNotificacao(Number(notificacaoId))
+		res.json(notificacao)
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}

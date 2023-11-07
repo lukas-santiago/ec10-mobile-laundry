@@ -4,7 +4,7 @@ import { logger } from '../config/logger.js'
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-async function healthCheck(req, res) {
+async function healthCheck(req, res, next) {
 	try {
 		res.status(200).send()
 	} catch (error) {
