@@ -1,0 +1,47 @@
+version: '3'
+name: laundry_app
+services:
+  backend:
+    container_name: backend
+    build: ./backend
+    working_dir: /app
+    command: npm start
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
+      APP_PORT: 3000
+      DATABASE_URL: postgres://postgres_user:postgres_password@postgres:5432/laundry_app?schema=laundry_app
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_DB: laundry_app
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  mobile:
+    image: node:20
+    container_name: mobile
+    working_dir: /app/mobile
+    command: npm start
+    volumes:
+      - ./mobile:/app/mobile
+    ports:
+      - '19002:19002'
+      - '19006:19006'
+    environment:
+      REACT_NATIVE_PACKAGER_HOSTNAME: '172.18.173.63' # Substitua pelo seu IP
+
+volumes:
+  pg_data:

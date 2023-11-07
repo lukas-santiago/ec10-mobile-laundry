@@ -1,0 +1,11 @@
+# Testes das requisições com a extensão REST CLIENT do vscode
+
+@HOST = http://localhost:3000
+
+# HEALTH CHECK
+GET {{HOST}}/health
+
+###
+
+GET {{HOST}}/user
+Content-Type: application/json

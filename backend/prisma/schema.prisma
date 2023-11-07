@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuarios {
+  id           Int            @id @default(autoincrement())
+  nome         String         @db.VarChar(100)
+  email        String         @unique @db.VarChar(100)
+  senha        String         @db.VarChar(255)
+  pedidos      Pedidos[] // Relacionamento um-para-muitos
+  notificacoes Notificacoes[] // Relacionamento um-para-muitos
+}
+
+model Servicos {
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(100)
+  descricao String?   @db.Text
+  preco     Decimal   @db.Decimal(10, 2)
+  pedidos   Pedidos[] // Relacionamento um-para-muitos
+}
+
+model Pedidos {
+  id          Int      @id @default(autoincrement())
+  usuario_id  Int
+  servico_id  Int
+  data_pedido DateTime @default(now())
+  status      String   @default("Em Processamento") @db.VarChar(50)
+  usuario     Usuarios @relation(fields: [usuario_id], references: [id])
+  servico     Servicos @relation(fields: [servico_id], references: [id])
+}
+
+model Notificacoes {
+  id         Int      @id @default(autoincrement())
+  usuario_id Int
+  mensagem   String   @db.Text
+  data_envio DateTime @default(now())
+  usuario    Usuarios @relation(fields: [usuario_id], references: [id])
+}
