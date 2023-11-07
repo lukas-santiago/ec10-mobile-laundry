@@ -1,0 +1,92 @@
+# Testes das requisições com a extensão REST CLIENT do vscode
+
+@HOST = http://localhost:3000
+
+# Requisições para a controller de servicos
+
+GET {{HOST}}/servico/1
+
+###
+
+GET {{HOST}}/servico
+
+###
+
+POST {{HOST}}/servico
+Content-Type: application/json
+
+{
+    "clienteId": 1,
+    "produtoId": 1,
+    "quantidade": 2
+}
+
+###
+
+PUT {{HOST}}/servico/1
+Content-Type: application/json
+
+{
+    "clienteId": 1,
+    "produtoId": 1,
+    "quantidade": 3
+}
+
+###
+
+DELETE {{HOST}}/servico/1
+
+###
+
+# Requisições para a controller de notificações
+
+GET {{HOST}}/notificacao/1
+
+###
+
+GET {{HOST}}/notificacao
+
+###
+
+POST {{HOST}}/notificacao
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "mensagem": "Nova notificação"
+}
+
+###
+
+PUT {{HOST}}/notificacao/1
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "mensagem": "Notificação atualizada"
+}
+
+###
+
+DELETE {{HOST}}/notificacao/1
+
+###
+
+# Requisições para a controller de usuários
+
+GET {{HOST}}/user
+
+###
+
+POST {{HOST}}/user
+Content-Type: application/json
+
+{
+    "nome": "test",
+    "email": "test@test.com",
+    "senha": "123"
+}
+
+###
+
+GET {{HOST}}/user?id=1

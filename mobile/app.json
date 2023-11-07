@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ec10-n2b1-hamburguer-app",
-    "slug": "ec10-n2b1-hamburguer-app",
+    "name": "ec10-laundry-app",
+    "slug": "ec10-laundry-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -22,7 +22,7 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fesa.lk.ec10n2b1hamburguerapp"
+      "package": "com.fesa.lk.ec10laundryapp"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"

@@ -10,7 +10,7 @@ import * as serviceService from '../services/servico.service.js'
 export async function getService(req, res) {
 	try {
 		const { id } = req.params
-		res.json(await serviceService.getServiceById(id))
+		res.json(await serviceService.getServicoById(id))
 	} catch (error) {
 		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
 	}
@@ -21,11 +21,11 @@ export async function getService(req, res) {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export async function listServices(req, res) {
+export async function listServices(req, res, next) {
 	try {
-		res.json(await serviceService.listServices())
+		res.json(await serviceService.listServicos())
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }
 
@@ -37,7 +37,7 @@ export async function listServices(req, res) {
 export async function createService(req, res) {
 	try {
 		const { nome, descricao } = req.body
-		res.json(await serviceService.createService(nome, descricao))
+		res.json(await serviceService.createServico(nome, descricao))
 	} catch (error) {
 		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
 	}
@@ -52,7 +52,7 @@ export async function updateService(req, res) {
 	try {
 		const { id } = req.params
 		const { nome, descricao } = req.body
-		res.json(await serviceService.updateService(id, nome, descricao))
+		res.json(await serviceService.updateServico(id, nome, descricao))
 	} catch (error) {
 		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
 	}
@@ -67,7 +67,7 @@ export async function updateService(req, res) {
 export async function deleteService(req, res) {
 	try {
 		const { id } = req.params
-		res.json(await serviceService.deleteService(id))
+		res.json(await serviceService.deleteServico(id))
 	} catch (error) {
 		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
 	}

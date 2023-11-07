@@ -1,17 +1,15 @@
-import express from 'express'
-
-import * as healthController from '../controllers/health.controller.js'
-import * as userController from '../controllers/user.controller.js'
-
+import { Router } from 'express'
 import { check } from '../utils/validator.js'
-
 import { UserValidator } from '../validators/user.validator.js'
+import * as userController from '../controllers/usuario.controller.js'
 
-const router = express.Router()
+import { authMiddleware } from '../middleware/auth.middleware.js'
 
-router.get('/health', healthController.healthCheck)
+const router = new Router()
 
 const { create, update } = UserValidator
+
+// router.use(authMiddleware)
 
 router.get('/user', userController.listUsers)
 router.post('/user', check(create), userController.createUser)

@@ -7,12 +7,12 @@ import * as notificacaoService from '../services/notificacao.service.js'
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export async function getNotificacao(req, res) {
+export async function getNotificacao(req, res, next) {
 	try {
 		const { id } = req.params
 		res.json(await notificacaoService.getNotificacaoById(id))
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }
 
@@ -21,11 +21,11 @@ export async function getNotificacao(req, res) {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export async function listNotificacoes(req, res) {
+export async function listNotificacoes(req, res, next) {
 	try {
 		res.json(await notificacaoService.listNotificacoes())
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }
 
@@ -34,14 +34,14 @@ export async function listNotificacoes(req, res) {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export async function createNotificacao(req, res) {
+export async function createNotificacao(req, res, next) {
 	try {
 		const { usuarioId, mensagem } = req.body
 		res.json(
 			await notificacaoService.createNotificacao(usuarioId, mensagem)
 		)
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }
 
@@ -50,7 +50,7 @@ export async function createNotificacao(req, res) {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-export async function updateNotificacao(req, res) {
+export async function updateNotificacao(req, res, next) {
 	try {
 		const { id } = req.params
 		const { usuarioId, mensagem } = req.body
@@ -58,7 +58,7 @@ export async function updateNotificacao(req, res) {
 			await notificacaoService.updateNotificacao(id, usuarioId, mensagem)
 		)
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }
 
@@ -68,11 +68,11 @@ export async function updateNotificacao(req, res) {
  * @param {import('express').NextFunction} next
  * @return {void}
  * */
-export async function deleteNotificacao(req, res) {
+export async function deleteNotificacao(req, res, next) {
 	try {
 		const { id } = req.params
 		res.json(await notificacaoService.deleteNotificacao(id))
 	} catch (error) {
-		throw new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR)
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
 }

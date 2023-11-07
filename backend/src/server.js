@@ -1,6 +1,6 @@
 import express from 'express'
-import cors from "cors";
-import router from './routes/router.js'
+import cors from 'cors'
+import router from './routes/index.js'
 import { logger } from './config/logger.js'
 import { loggerMiddleware } from './middleware/logger.middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware.js'

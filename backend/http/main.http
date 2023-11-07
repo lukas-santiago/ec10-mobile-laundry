@@ -1,6 +1,7 @@
 # Testes das requisições com a extensão REST CLIENT do vscode
 
 @HOST = http://localhost:3000
+@TOKEN = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwiaWF0IjoxNjk5MzUwMzM2fQ.iBt85nHaaPJ1VNhisIzpybQwB_3_VjVQSJhSAR2TBg0
 
 # HEALTH CHECK
 GET {{HOST}}/health
@@ -23,3 +24,29 @@ Content-Type: application/json
 ###
 
 GET {{HOST}}/user?id=1
+
+###
+
+POST {{HOST}}/auth
+Content-Type: application/json
+
+{
+    "email": "test1@test.com",
+    "senha": "123"
+}
+
+###
+
+POST {{HOST}}/register
+Content-Type: application/json
+
+{
+    "nome": "test2",
+    "email": "test2@test.com",
+    "senha": "123"
+}
+
+###
+
+GET  {{HOST}}/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwiaWF0IjoxNjk5MzUwNjEzfQ.B43xDPk4clyZvnOe5wkPdrFrQKn0uKpeqOG-auOWKfA
