@@ -41,7 +41,29 @@ export async function listNotificacoesByUser(req, res, next) {
 		const notificacao = await notificacaoService.listNotificacoesByUser(
 			userId
 		)
-		res.json(notificacao)
+		res.json(
+			notificacao.map((notificacao) => ({
+				id: notificacao.id,
+				message: notificacao.mensagem,
+				active: notificacao.ativo,
+			}))
+		)
+	} catch (error) {
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
+	}
+}
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+export async function countActive(req, res, next) {
+	try {
+		const { userId } = req.body
+		const count = await notificacaoService.countActive(userId)
+		res.json({
+			count,
+		})
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}

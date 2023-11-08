@@ -7,12 +7,13 @@ const router = new Router()
 
 // const { create, update } = ServicoValidator
 
-router.post('/notificacao/byUser', notificacaoService.listNotificacoesByUser)
-router.post('/notificacao/:notificacaoId/disable', notificacaoService.disableNotificacao)
-// router.get('/notificacao', notificacaoService.listNotificacoes)
-// router.post('/notificacao', check(create), notificacaoService.createService)
-// router.get('/notificacao/:id', notificacaoService.getService)
-// router.put('/notificacao/:id', check(update), notificacaoService.updateService)
-// router.delete('/notificacao/:id', notificacaoService.deleteService)
+router.get('/notification/byUser', notificacaoService.listNotificacoesByUser)
+router.get('/notification/countActive', notificacaoService.countActive)
+router.post('/notification/:notificacaoId/disable', notificacaoService.disableNotificacao)
+// router.get('/notification', notificacaoService.listNotificacoes)
+// router.post('/notification', check(create), notificacaoService.createService)
+// router.get('/notification/:id', notificacaoService.getService)
+// router.put('/notification/:id', check(update), notificacaoService.updateService)
+// router.delete('/notification/:id', notificacaoService.deleteService)
 
 export default router

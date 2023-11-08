@@ -29,9 +29,10 @@ export async function listPedidos(req, res, next) {
 		res.json(
 			pedidos.map((pedido) => ({
 				id: pedido.id,
-				clienteId: pedido.clienteId,
-				produtosId: pedido.produtosId,
-				preco: pedido.preco,
+				name: pedido.servico.nome,
+				description: pedido.servico.descricao,
+				status: pedido.status,
+				price: pedido.preco,
 			}))
 		)
 	} catch (error) {

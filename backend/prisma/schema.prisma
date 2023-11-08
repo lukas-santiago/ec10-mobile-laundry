@@ -34,7 +34,7 @@ model Pedidos {
   servico_id  Int
   preco       Decimal  @db.Decimal(10, 2)
   data_pedido DateTime @default(now())
-  status      String   @default("Em Processamento") @db.VarChar(50)
+  status      String   @default("Pendente") @db.VarChar(50)
   usuario     Usuarios @relation(fields: [usuario_id], references: [id])
   servico     Servicos @relation(fields: [servico_id], references: [id])
 }

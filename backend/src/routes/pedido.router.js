@@ -7,10 +7,10 @@ const router = new Router()
 
 const { create, update } = PedidoValidator
 
-router.get('/pedido', pedidoController.listPedidos)
-router.post('/pedido', check(create), pedidoController.createPedido)
-router.get('/pedido/:id', pedidoController.getPedido)
-router.put('/pedido/:id', check(update), pedidoController.updatePedido)
-router.delete('/pedido/:id', pedidoController.deletePedido)
+router.get('/order', pedidoController.listPedidos)
+router.post('/order', check(create), pedidoController.createPedido)
+router.get('/order/:id', pedidoController.getPedido)
+router.put('/order/:id', check(update), pedidoController.updatePedido)
+router.delete('/order/:id', pedidoController.deletePedido)
 
 export default router

@@ -27,7 +27,9 @@ export async function listServices(req, res, next) {
 		res.json(
 			servicos.map((servico) => ({
 				id: servico.id,
-				nome: servico.nome,
+				name: servico.nome,
+				description: servico.descricao,
+				price: servico.preco,
 			}))
 		)
 	} catch (error) {

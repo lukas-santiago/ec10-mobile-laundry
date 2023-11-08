@@ -7,10 +7,10 @@ const router = new Router()
 
 const { create, update } = ServicoValidator
 
-router.get('/servico', servicoController.listServices)
-router.post('/servico', check(create), servicoController.createService)
-router.get('/servico/:id', servicoController.getService)
-router.put('/servico/:id', check(update), servicoController.updateService)
-router.delete('/servico/:id', servicoController.deleteService)
+router.get('/service', servicoController.listServices)
+router.post('/service', check(create), servicoController.createService)
+router.get('/service/:id', servicoController.getService)
+router.put('/service/:id', check(update), servicoController.updateService)
+router.delete('/service/:id', servicoController.deleteService)
 
 export default router
