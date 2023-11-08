@@ -19,3 +19,7 @@ export async function updateService(serviceId, serviceData) {
 export async function deleteService(serviceId) {
   return await api.delete("/service/" + serviceId);
 }
+
+export async function disableService(serviceId) {
+  return await api.post("/service/" + serviceId + "/disable");
+}

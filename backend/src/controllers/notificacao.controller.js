@@ -1,7 +1,6 @@
 import httpStatus from 'http-status'
 import { AppError } from '../errors/app.error.js'
 import * as notificacaoService from '../services/notificacao.service.js'
-import * as pedidoService from '../services/pedido.service.js'
 
 /**
  * @param {import('express').Request} req
@@ -80,16 +79,16 @@ export async function disableNotificacao(req, res, next) {
 			Number(notificacaoId)
 		)
 
-		if (notificacao.pedido_id > 0) {
-			const pedido = await pedidoService.getPedidoById(
-				notificacao.pedido_id
-			)
+		// if (notificacao.pedido_id > 0) {
+		// 	const pedido = await pedidoService.getPedidoById(
+		// 		notificacao.pedido_id
+		// 	)
 
-			notificacaoService.createNotificacao(
-				pedido.usuario.id,
-				`O Pedido do serviço "${pedido.servico.nome}" foi realizado`
-			)
-		}
+		// 	notificacaoService.createNotificacao(
+		// 		pedido.usuario.id,
+		// 		`O Pedido do serviço "${pedido.servico.nome}" foi realizado`
+		// 	)
+		// }
 		await notificacaoService.disableNotificacao(Number(notificacaoId))
 		res.json(notificacao)
 	} catch (error) {

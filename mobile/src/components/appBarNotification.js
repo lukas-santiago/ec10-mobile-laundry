@@ -5,9 +5,6 @@ import { NotificationContext } from "../context/notification.context.js";
 
 export const AppBarNotification = ({ handlePress }) => {
   const { unreadMessages } = useContext(NotificationContext);
-
-  console.log({ unreadMessages });
-
   return (
     <View>
       <Appbar.Action

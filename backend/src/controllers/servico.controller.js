@@ -44,8 +44,8 @@ export async function listServices(req, res, next) {
  */
 export async function createService(req, res, next) {
 	try {
-		const { nome, descricao } = req.body
-		res.json(await serviceService.createServico(nome, descricao))
+		const { name, description, price } = req.body
+		res.json(await serviceService.createServico(name, description, price))
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
@@ -59,8 +59,10 @@ export async function createService(req, res, next) {
 export async function updateService(req, res, next) {
 	try {
 		const { id } = req.params
-		const { nome, descricao } = req.body
-		res.json(await serviceService.updateServico(id, nome, descricao))
+		const { name, description, price } = req.body
+		res.json(
+			await serviceService.updateServico(Number(id), name, description, price)
+		)
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}
@@ -76,6 +78,21 @@ export async function deleteService(req, res, next) {
 	try {
 		const { id } = req.params
 		res.json(await serviceService.deleteServico(id))
+	} catch (error) {
+		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
+	}
+}
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {void}
+ * */
+export async function disableServico(req, res, next) {
+	try {
+		const { id } = req.params
+		res.json(await serviceService.disableServico(Number(id)))
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}

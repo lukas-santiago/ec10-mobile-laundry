@@ -25,6 +25,7 @@ model Servicos {
   nome      String    @db.VarChar(100)
   descricao String?   @db.Text
   preco     Decimal   @db.Decimal(10, 2)
+  ativo      Boolean  @default(true) @db.Boolean
   pedidos   Pedidos[] // Relacionamento um-para-muitos
 }
 

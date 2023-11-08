@@ -23,5 +23,9 @@ export function NotificationContextProvider({ children }) {
     return () => clearInterval(intervalId);
   }, []);
 
-  return <NotificationContext.Provider value={{ unreadMessages }}>{children}</NotificationContext.Provider>;
+  return (
+    <NotificationContext.Provider value={{ unreadMessages, getUnreadMessages }}>
+      {children}
+    </NotificationContext.Provider>
+  );
 }

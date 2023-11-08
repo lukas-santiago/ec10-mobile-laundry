@@ -3,9 +3,16 @@ import React from "react";
 import { View } from "react-native";
 import { Appbar, Button, HelperText, TextInput, Text, Badge } from "react-native-paper";
 import { AppBarNotification } from "../../components/appBarNotification.js";
+import { NotificationContext } from "../../context/notification.context.js";
 
-export const MenuPage = ({ navigation }) => {
+export const MenuPage = (props) => {
+  const { navigation } = props;
   const goTo = (page) => navigation.navigate(page);
+  const { getUnreadMessages } = React.useContext(NotificationContext);
+
+  React.useEffect(() => {
+    getUnreadMessages();
+  }, [props]);
 
   return (
     <View>

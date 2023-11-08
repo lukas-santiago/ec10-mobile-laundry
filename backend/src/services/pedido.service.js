@@ -46,5 +46,8 @@ export async function listPedidos() {
 			usuario: true,
 			servico: true,
 		},
+		orderBy: {
+			id: 'asc',
+		},
 	})
 }

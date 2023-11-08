@@ -12,5 +12,6 @@ router.post('/service', check(create), servicoController.createService)
 router.get('/service/:id', servicoController.getService)
 router.put('/service/:id', check(update), servicoController.updateService)
 router.delete('/service/:id', servicoController.deleteService)
+router.post('/service/:id/disable', servicoController.disableServico)
 
 export default router

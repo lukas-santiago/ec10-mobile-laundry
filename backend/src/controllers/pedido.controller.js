@@ -1,8 +1,9 @@
 import httpStatus from 'http-status'
 import { AppError } from '../errors/app.error.js'
+import * as notificacaoService from '../services/notificacao.service.js'
 import * as pedidoService from '../services/pedido.service.js'
 import * as serviceService from '../services/servico.service.js'
-import * as notificacaoService from '../services/notificacao.service.js'
+import * as usuarioService from '../services/usuario.service.js'
 
 /**
  * @param {import('express').Request} req
@@ -77,15 +78,38 @@ export async function createPedido(req, res, next) {
 export async function updatePedido(req, res, next) {
 	try {
 		const { id } = req.params
-		const { clienteId, produtoId, quantidade } = req.body
-		res.json(
-			await pedidoService.updatePedido(
-				id,
-				clienteId,
-				produtoId,
-				quantidade
-			)
+		const { status } = req.body
+
+		const acceptedStatuses = ['Em andamento', 'Rejeitado', 'Finalizado']
+
+		if (!acceptedStatuses.includes(status))
+			return next(new AppError('Status inválido', httpStatus.BAD_REQUEST))
+
+		const updated = await pedidoService.updatePedido(Number(id), status)
+		const service = await serviceService.getServicoById(
+			Number(updated.servico_id)
 		)
+
+		const usuario = await usuarioService.getUserById(updated.usuario_id)
+
+		if (status === 'Rejeitado') {
+			await notificacaoService.createNotificacao(
+				usuario.id,
+				`O Pedido "${service.nome}" foi rejeitado pelo fornecedor.`
+			)
+		} else if (status === 'Finalizado') {
+			await notificacaoService.createNotificacao(
+				usuario.id,
+				`O Pedido "${service.nome}" foi finalizado.`
+			)
+		} else if (status === 'Em andamento') {
+			await notificacaoService.createNotificacao(
+				usuario.id,
+				`O Pedido "${service.nome}" foi aceito e está em andamento. Aguarde a finalização.`
+			)
+		}
+
+		res.json(updated)
 	} catch (error) {
 		next(new AppError(error.message, httpStatus.INTERNAL_SERVER_ERROR))
 	}

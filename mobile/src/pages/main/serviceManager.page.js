@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import {
   Appbar,
   Button,
@@ -14,9 +14,10 @@ import {
 } from "react-native-paper";
 import * as Yup from "yup";
 
-import { listServices } from "../../services/service.service.js";
+import { createService, disableService, listServices, updateService } from "../../services/service.service.js";
 import { Formik } from "formik";
 import { AppBarNotification } from "../../components/appBarNotification.js";
+import CurrencyInput from "react-native-currency-input";
 
 /**
  * @typedef {Array.<Object>} ServicesState
@@ -33,58 +34,77 @@ export const ServiceManagerPage = ({ navigation }) => {
    */
   const [services, setServices] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
+  const [selectedService, setSelectedService] = React.useState(null);
+
+  async function listAllServices() {
+    listServices().then((services) => {
+      console.log({ services });
+      setServices(services);
+    });
+  }
 
   React.useEffect(() => {
-    // listServices().then((services) => {
-    //   console.log({ services });
-    // });
-    setServices([
-      {
-        id: 1,
-        name: "Lavagem simples",
-        description: "Lavagem simples de roupa",
-        prince: 10.99,
-      },
-      {
-        id: 2,
-        name: "Lavagem completa",
-        description: "Lavagem completa de roupa",
-        prince: 15.99,
-      },
-      {
-        id: 3,
-        name: "Secagem",
-        description: "Secagem de roupa",
-        prince: 5.99,
-      },
-    ]);
+    listAllServices();
   }, []);
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Gerenciamento de Serviços" />
         <AppBarNotification handlePress={() => navigation.navigate("Notifications")} />
       </Appbar.Header>
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           paddingVertical: 24,
           paddingHorizontal: 16,
           paddingBottom: 24,
           gap: 16,
         }}
       >
-        <ModalForm visible={visible} setVisible={setVisible} />
+        <ModalForm
+          visible={visible}
+          setVisible={setVisible}
+          service={selectedService}
+          hideModal={() => {
+            setVisible(false);
+            setSelectedService(null);
+            listAllServices();
+          }}
+        />
         {services.map((service, i) => (
           <List.Item
             key={i}
             title={service.name}
             right={(props) => (
               <View style={{ flexDirection: "row", gap: 8 }}>
-                <TouchableRipple style={{ padding: 4, paddingHorizontal: 12 }} onPress={() => console.log({ service })}>
+                <TouchableRipple
+                  style={{ padding: 4, paddingHorizontal: 12 }}
+                  onPress={() => {
+                    Alert.alert("Remover Serviço", `Deseja remover o Serviço ${service.name}?`, [
+                      {
+                        text: "Cancelar",
+                        style: "cancel",
+                      },
+                      {
+                        text: "OK",
+                        onPress: () => {
+                          disableService(service.id).then(() => {
+                            listAllServices();
+                          });
+                        },
+                      },
+                    ]);
+                  }}
+                >
                   <List.Icon icon="close-thick" color="red" />
                 </TouchableRipple>
-                <TouchableRipple style={{ padding: 4, paddingHorizontal: 12 }} onPress={() => setVisible(true)}>
+                <TouchableRipple
+                  style={{ padding: 4, paddingHorizontal: 12 }}
+                  onPress={() => {
+                    setSelectedService(service);
+                    setVisible(true);
+                  }}
+                >
                   <List.Icon icon="pencil" />
                 </TouchableRipple>
               </View>
@@ -92,21 +112,21 @@ export const ServiceManagerPage = ({ navigation }) => {
             // onLongPress={() => console.log("onLongPress")}
           />
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
-const ModalForm = ({ visible, setVisible }) => {
+const ModalForm = ({ visible, setVisible, service, hideModal }) => {
   const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+
   const containerStyle = { backgroundColor: "white", padding: 20, margin: 20, borderRadius: 10 };
 
   return (
     <>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-          <ServiceForm />
+          <ServiceForm serviceData={service} hideModal={hideModal} />
         </Modal>
       </Portal>
       <Button mode="contained" style={{ marginTop: 30 }} onPress={showModal}>
@@ -116,25 +136,46 @@ const ModalForm = ({ visible, setVisible }) => {
   );
 };
 
-function ServiceForm() {
+function ServiceForm({ serviceData, hideModal }) {
+  const [service, setService] = React.useState(
+    serviceData || {
+      name: "",
+      description: "",
+      price: "",
+    },
+  );
+
   const ServiceSchema = Yup.object({
-    nome: Yup.string().required("Required"),
-    descricao: Yup.string().required("Required"),
-    preco: Yup.number().required("Required"),
+    name: Yup.string().required("Campo obrigatório"),
+    description: Yup.string().required("Campo obrigatório"),
+    price: Yup.number().required("Campo obrigatório"),
   });
 
-  const ServiceInitialValues = {
-    nome: "",
-    descricao: "",
-    preco: "",
-  };
+  const mode = serviceData ? "update" : "create";
 
   return (
     <Formik
       validationSchema={ServiceSchema}
-      initialValues={ServiceInitialValues}
+      initialValues={service}
       onSubmit={(values) => {
         console.log({ values });
+        if (mode === "create") {
+          createService({
+            name: values.name,
+            description: values.description,
+            price: values.price,
+          }).then(() => {
+            hideModal();
+          });
+        } else if (mode === "update") {
+          updateService(serviceData.id, {
+            name: values.name,
+            description: values.description,
+            price: values.price,
+          }).then(() => {
+            hideModal();
+          });
+        }
       }}
     >
       {function FormikForm({ handleChange, handleBlur, values, errors, setFieldValue, handleSubmit, isValid }) {
@@ -143,38 +184,42 @@ function ServiceForm() {
             <View>
               <TextInput
                 label="Nome"
-                onChangeText={handleChange("nome")}
-                onBlur={handleBlur("nome")}
-                value={values.nome}
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
               />
-              <HelperText type="error" visible={!!errors.nome}>
-                {errors.nome}
+              <HelperText type="error" visible={!!errors.name}>
+                {errors.name}
               </HelperText>
             </View>
             <View>
               <TextInput
                 label="Descricão"
-                onChangeText={handleChange("descricao")}
-                onBlur={handleBlur("descricao")}
-                value={values.descricao}
+                onChangeText={handleChange("description")}
+                onBlur={handleBlur("description")}
+                value={values.description}
               />
-              <HelperText type="error" visible={!!errors.descricao}>
-                {errors.descricao}
+              <HelperText type="error" visible={!!errors.description}>
+                {errors.description}
               </HelperText>
             </View>
             <View>
-              <TextInput
-                label="Preço"
-                onChangeText={handleChange("preco")}
-                onBlur={handleBlur("preco")}
-                value={values.preco}
+              <CurrencyInput
+                prefix="R$ "
+                delimiter="."
+                separator=","
+                precision={2}
+                minValue={0}
+                value={values.price}
+                onBlur={handleBlur("price")}
+                onChangeValue={(value) => setFieldValue("price", value)}
+                renderTextInput={(textInputProps) => (
+                  <TextInput {...textInputProps} label="Preço" keyboardType="decimal-pad" />
+                )}
               />
-              <HelperText type="error" visible={!!errors.preco}>
-                {errors.preco}
-              </HelperText>
             </View>
-            <Button mode="contained" onPress={handleSubmit} disabled={!isValid}>
-              Entrar
+            <Button mode="contained" onPress={handleSubmit} disabled={!isValid} style={{ marginTop: 30 }}>
+              Salvar
             </Button>
           </>
         );

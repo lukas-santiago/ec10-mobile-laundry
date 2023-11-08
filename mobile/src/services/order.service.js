@@ -13,5 +13,5 @@ export async function getOrder(orderId) {
 }
 
 export async function updateStatusOrder(orderId, status) {
-  return await api.put(`/order/${orderId}/status`, { status });
+  return await api.put(`/order/${orderId}`, { status });
 }

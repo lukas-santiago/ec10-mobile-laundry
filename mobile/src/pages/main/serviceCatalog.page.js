@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React from "react";
-import { Alert, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { Appbar, Button, Card, List, Text } from "react-native-paper";
 import { AppBarNotification } from "../../components/appBarNotification.js";
 import { listServices } from "../../services/service.service.js";
@@ -19,14 +19,14 @@ export const ServiceCatalogPage = ({ navigation }) => {
     });
   }, []);
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Catálogo de Serviços" />
         <AppBarNotification handlePress={() => navigation.navigate("Notifications")} />
       </Appbar.Header>
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           paddingVertical: 24,
           paddingHorizontal: 32,
           paddingBottom: 24,
@@ -64,14 +64,11 @@ export const ServiceCatalogPage = ({ navigation }) => {
                         {
                           text: "Confirmar",
                           onPress: () => {
-                            console.log({ service });
-
                             createOrder({
                               clienteId: 1,
                               servicoId: service.id,
                             })
-                              .then((order) => {
-                                console.log({ order });
+                              .then(() => {
                                 Alert.alert("Pedido gerado com sucesso");
                               })
                               .catch((error) => {
@@ -90,7 +87,7 @@ export const ServiceCatalogPage = ({ navigation }) => {
             </Card>
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 };

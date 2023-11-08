@@ -10,6 +10,7 @@ const APP_PORT = process.env.APP_PORT
 
 const app = express()
 
+app.disable('etag');
 app.use(express.json())
 app.use(cors())
 app.use(loggerMiddleware)

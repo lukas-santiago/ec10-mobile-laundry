@@ -31,7 +31,19 @@ export async function deleteServico(id) {
 	})
 }
 
+// Disable
+export async function disableServico(id) {
+	return await prisma.servicos.update({
+		where: { id },
+		data: { ativo: false },
+	})
+}
+
 // List
 export async function listServicos() {
-	return await prisma.servicos.findMany()
+	return await prisma.servicos.findMany({
+		where: {
+			ativo: true,
+		},
+	})
 }

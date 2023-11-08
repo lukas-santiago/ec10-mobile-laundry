@@ -1,48 +1,36 @@
 import React from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Appbar, Button, Card, List, Text } from "react-native-paper";
 import { AppBarNotification } from "../../components/appBarNotification.js";
+import { listOrders, updateStatusOrder } from "../../services/order.service.js";
 
 export function OrderManagerPage({ navigation }) {
-  const [orders, setOrders] = React.useState([
-    {
-      id: 1,
-      name: "Lavagem simples",
-      description: "Lavagem simples de roupa",
-      status: "Pendente",
-      price: 10.99,
-    },
-    {
-      id: 2,
-      name: "Lavagem completa",
-      description: "Lavagem completa de roupa",
-      status: "Em andamento",
-      price: 15.99,
-    },
-    {
-      id: 3,
-      name: "Secagem",
-      description: "Secagem de roupa",
-      status: "Finalizado",
-      price: 5.99,
-    },
-    {
-      id: 4,
-      name: "Lavagem simples",
-      description: "Lavagem simples de roupa",
-      status: "Rejeitado",
-      price: 10.99,
-    },
-  ]);
+  const [orders, setOrders] = React.useState([]);
+
+  async function handleStatusChange(orderId, status) {
+    updateStatusOrder(orderId, status).then(() => {
+      listAllOrders();
+    });
+  }
+
+  function listAllOrders() {
+    listOrders().then((orders) => {
+      setOrders(orders);
+    });
+  }
+
+  React.useEffect(() => {
+    listAllOrders();
+  }, []);
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Gerenciamento de Pedidos" />
         <AppBarNotification handlePress={() => navigation.navigate("Notifications")} />
       </Appbar.Header>
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           paddingVertical: 24,
           paddingHorizontal: 32,
           paddingBottom: 24,
@@ -68,20 +56,32 @@ export function OrderManagerPage({ navigation }) {
               <Card.Actions>
                 {order.status === "Pendente" && (
                   <View style={{ flexDirection: "row", gap: 8 }}>
-                    <Button style={{ flex: 1 }} mode="contained">
+                    <Button
+                      style={{ flex: 1 }}
+                      mode="contained"
+                      onPress={() => handleStatusChange(order.id, "Rejeitado")}
+                    >
                       Rejeitar
                     </Button>
-                    <Button style={{ flex: 1 }} mode="contained">
+                    <Button
+                      style={{ flex: 1 }}
+                      mode="contained"
+                      onPress={() => handleStatusChange(order.id, "Em andamento")}
+                    >
                       Aceitar
                     </Button>
                   </View>
                 )}
-                {order.status === "Em andamento" && <Button style={{ flex: 1 }}>Finalizar</Button>}
+                {order.status === "Em andamento" && (
+                  <Button style={{ flex: 1 }} onPress={() => handleStatusChange(order.id, "Finalizado")}>
+                    Finalizar
+                  </Button>
+                )}
               </Card.Actions>
             </Card>
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 }

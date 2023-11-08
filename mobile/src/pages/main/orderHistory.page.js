@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { Appbar, Card, Text } from "react-native-paper";
 import { AppBarNotification } from "../../components/appBarNotification.js";
 import { listOrders } from "../../services/order.service.js";
@@ -9,20 +9,19 @@ export function OrderHistoryPage({ navigation }) {
 
   React.useEffect(() => {
     listOrders().then((orders) => {
-      console.log({ orders });
       setOrders(orders);
     });
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Histórico de Pedidos" />
         <AppBarNotification handlePress={() => navigation.navigate("Notifications")} />
       </Appbar.Header>
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           paddingVertical: 24,
           paddingHorizontal: 32,
           paddingBottom: 24,
@@ -45,7 +44,7 @@ export function OrderHistoryPage({ navigation }) {
             </Card>
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 }
