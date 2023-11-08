@@ -1,13 +1,16 @@
 import { Formik } from "formik";
 import React from "react";
-import { View, Text } from "react-native";
-import { Appbar, Button, HelperText, TextInput } from "react-native-paper";
+import { View } from "react-native";
+import { Appbar, Button, HelperText, TextInput, Text } from "react-native-paper";
 
 export const MenuPage = ({ navigation }) => {
   return (
     <View>
       <Appbar.Header>
         <Appbar.Content title="Menu" />
+        <Appbar.Action icon='bell' onPress={() => {
+          navigation.navigate("Servicos")
+        }} />
       </Appbar.Header>
       <View
         style={{
@@ -17,11 +20,31 @@ export const MenuPage = ({ navigation }) => {
           gap: 16,
         }}
       >
+        <Text variant="bodyLarge">Funções Administrativas</Text>
         <Button
           mode="contained"
           onPress={() => navigation.navigate("Servicos")}
         >
           Serviços
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate("Servicos")}
+        >
+          Pedidos
+        </Button>
+        <Text variant="bodyLarge">Funções Usuais</Text>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate("Servicos")}
+        >
+          Serviços
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate("Servicos")}
+        >
+          Pedidos
         </Button>
       </View>
     </View>
